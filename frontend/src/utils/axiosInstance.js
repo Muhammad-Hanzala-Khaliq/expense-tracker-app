@@ -12,36 +12,35 @@ const axiosInstance = axios.create({
 
 // Request Interceptors
 axiosInstance.interceptors.request.use(
-    (config) => {
-        const accessToken = localStorage.getItem('Token');
-        if(accessToken){
-            config.headers.Authorization = `Bearer ${accessToken}`;
-        }
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
+  (config) => {
+    const accessToken = localStorage.getItem("token");
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
     }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
 );
 
 // Response Interceptors
 axiosInstance.interceptors.response.use(
-    (response) => {
-        return response
-    },
-    (error) => {
-        if(error.response){
-            if(error.response.status === 401){
-
-                window.location.href = '/login';
-            }else if(error.response.status === 500){
-                console.error("Server error Please Try Again")
-            }   
-        }else if(error.code === "ECONNABORTED"){
-            console.error("Request Timeout.Please Try Again")
-        }
-        return Promise.reject(error)
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response) {
+      if (error.response.status === 401) {
+        window.location.href = "/login";
+      } else if (error.response.status === 500) {
+        console.error("Server error Please Try Again");
+      }
+    } else if (error.code === "ECONNABORTED") {
+      console.error("Request Timeout.Please Try Again");
     }
-)
+    return Promise.reject(error);
+  }
+);
 
 export default axiosInstance

@@ -9,10 +9,9 @@ const getDashboardData = async (req, res) => {
 
         // fetch total income
         const totalIncome = await Income.aggregate([
-            {$match:{userId:userObjectId}},
-            {$group:{_id:null,total:{$sum:'$amount'}}},
-        ])
-        console.log("totalIncome",{totalIncome,userId:isValidObjectId(userId)});
+          { $match: { userId: userObjectId } },
+          { $group: { _id: null, total: { $sum: "$amount" } } },
+        ]);
 
         const totalExpense = await Expense.aggregate([
             {$match:{userId:userObjectId}},
