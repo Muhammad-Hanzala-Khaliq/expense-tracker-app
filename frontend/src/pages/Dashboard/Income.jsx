@@ -9,10 +9,11 @@ import toast from "react-hot-toast";
 import IncomeList from "../../components/Income/IncomeList";
 import DeleteAlert from "../../components/DeleteAlert";
 import { userUserAuth } from "../../hooks/useUserAuth";
+import AIInsights from "../../components/AIInsights";
 
 const Income = () => {
   userUserAuth();
-
+  const [userId, setUserId] = useState(null);
   const [incomeData, setIncomeData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [openDeleteAlert, setOpenDeleteAlert] = useState({
@@ -84,11 +85,34 @@ const Income = () => {
       );
     }
   };
-  const handleDownloadIncomeDetails = async () => {};
+  const handleDownloadIncomeDetails = async () => {
+    try {
+      const response = await axiosInstance.get(
+        API_PATHS.INCOME.DOWNLOAD_INCOME,
+        {
+          responseType: "blob",
+        }
+      );
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "income_details.xlsx");
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading income details", error);
+      toast.error("Failed to download income details");
+    }
+  };
 
   useEffect(() => {
     fetchIncomeDetails();
-
+    const storedUserId = localStorage.getItem("userId");
+    if (storedUserId) {
+      setUserId(storedUserId);
+    }
     return () => {};
   }, []);
   return (
@@ -128,6 +152,7 @@ const Income = () => {
             onDelete={() => deleteIncome(openDeleteAlert.data)}
           />
         </Model>
+        <AIInsights userId={userId} title="Income" />
       </div>
     </DasboardLayout>
   );

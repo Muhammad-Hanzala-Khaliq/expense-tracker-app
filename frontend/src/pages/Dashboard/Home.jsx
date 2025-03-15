@@ -100,6 +100,7 @@ const Home = () => {
             onSeeMore={() => navigate("/income")}
           />
         </div>
+        {/* <VoiceInput /> */}
       </div>
     </DasboardLayout>
   );

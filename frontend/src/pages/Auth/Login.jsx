@@ -38,6 +38,11 @@ const Login = () => {
       const { token, user } = response.data;
       if (token) {
         localStorage.setItem("token", token);
+        localStorage.setItem("userId", user._id);
+        console.log(
+          "User ID stored in localStorage:",
+          localStorage.getItem("userId")
+        ); // Debugging
         updateUser(user);
         navigate("/dashboard");
       }
